@@ -156,6 +156,12 @@ class OpenMicView extends Component {
             });
     }
 
+    _extractTimeFromDate(dateString){
+        let timeArray = new Date(dateString).toLocaleTimeString().split(':');
+        timeArray[2] = timeArray[2].slice(3);
+        return timeArray.join(':');
+    }
+
     render() {
         var openmic = this.props.openmic;
         return (
@@ -183,12 +189,12 @@ class OpenMicView extends Component {
                 <View style={styles.sectionContainerOuter}>
                     <View style={styles.signUpTimeContainer}>
                         <Text style={styles.sectionHeaderText}>SIGN UP TIME</Text>
-                        <Text style={styles.valueText}>{openmic.sign_up_time}</Text>
+                        <Text style={styles.valueText}>{this._extractTimeFromDate(openmic.sign_up_time)}</Text>
                     </View>
 
                     <View style={styles.startTimeContainer}>
                         <Text style={styles.sectionHeaderText}>START TIME</Text>
-                        <Text style={styles.valueText}>{openmic.start_time}</Text>
+                        <Text style={styles.valueText}>{this._extractTimeFromDate(openmic.start_time)}</Text>
                     </View>
                 </View>
                 <View style={styles.separator}/>

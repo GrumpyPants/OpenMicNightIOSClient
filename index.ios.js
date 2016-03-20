@@ -9,7 +9,7 @@ class OpenMicNightApp extends React.Component {
       <React.NavigatorIOS
         style={styles.container}
         initialRoute={{
-          //title: 'Home',
+          title: 'Home',
           component: SearchPage
         }}/>
     );

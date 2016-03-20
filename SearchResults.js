@@ -4,17 +4,13 @@ var React = require('react-native');
 var OpenMicView = require('./OpenMicView');
 var AddOpenMicForm = require('./AddOpenMicForm');
 var {
-    AppRegistry,
     StyleSheet,
     Text,
     View,
     ListView,
     TouchableOpacity,
-    AlertIndicatorIOS,
     ActivityIndicatorIOS,
-    AlertIOS,
     Component,
-    Image,
     TouchableHighlight
 } = React;
 
@@ -23,7 +19,7 @@ var API_URL = 'http://demo9383702.mockable.io/users';
 class SearchResults extends Component {
   constructor(props) {
     super(props);
-    this.state = this.getInitialState();
+    this.state = this.getInitialDataSourceState();
     this.bindMethods();
   }
 
@@ -37,7 +33,7 @@ class SearchResults extends Component {
     }
   }
 
-  getInitialState() {
+  getInitialDataSourceState() {
     var getSectionData = (dataBlob, sectionID) => {
       return dataBlob[sectionID];
     }
@@ -115,8 +111,6 @@ class SearchResults extends Component {
 
   renderLoadingView() {
     return (
-        <View style={styles.header}>
-          <Text style={styles.headerText}>User List</Text>
           <View style={styles.container}>
             <ActivityIndicatorIOS
                 animating={!this.state.loaded}
@@ -124,7 +118,6 @@ class SearchResults extends Component {
                 size="large"
             />
           </View>
-        </View>
     );
   }
 

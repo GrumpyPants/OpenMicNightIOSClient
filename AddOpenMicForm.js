@@ -14,33 +14,6 @@ var {
 
 var Form = t.form.Form;
 
-var Time = t.enums({
-  '12:00 am': '12:00 am',
-  '1:00 am': '1:00 am',
-  '2:00 am': '2:00 am',
-  '3:00 am': '3:00 am',
-  '4:00 am': '4:00 am',
-  '5:00 am': '5:00 am',
-  '6:00 am': '6:00 am',
-  '7:00 am': '7:00 am',
-  '8:00 am': '8:00 am',
-  '9:00 am': '9:00 am',
-  '10:00 am': '10:00 am',
-  '11:00 am': '11:00 am',
-  '12:00 pm': '12:00 pm',
-  '1:00 pm': '1:00 pm',
-  '2:00 pm': '2:00 pm',
-  '3:00 pm': '3:00 pm',
-  '4:00 pm': '4:00 pm',
-  '5:00 pm': '5:00 pm',
-  '6:00 pm': '6:00 pm',
-  '7:00 pm': '7:00 pm',
-  '8:00 pm': '8:00 pm',
-  '9:00 pm': '9:00 pm',
-  '10:00 pm': '10:00 pm',
-  '11:00 pm': '11:00 pm',
-});
-
 var WeekDay = t.enums({
   'sunday': 'Sunday',
   'monday': 'Monday',
@@ -69,7 +42,7 @@ var OpenMic = t.struct({
   contactEmailAddress: t.maybe(t.Str),
   contactPhoneNumber: t.maybe(t.Str),
   signUpTime: t.Date,
-  startTime: Time,
+  startTime: t.Date,
   openMicRegularity: Regularity,
   openMicWeekDay: WeekDay,
   nextOpenMicDate: t.Str,
@@ -88,8 +61,8 @@ var OpenMicWeekly = t.struct({
   state: t.Str,
   contactEmailAddress: t.maybe(t.Str),
   contactPhoneNumber: t.maybe(t.Str),
-  signUpTime: Time,
-  startTime: Time,
+  signUpTime: t.Date,
+  startTime: t.Date,
   openMicRegularity: Regularity,
   sunday: t.Bool,
   monday: t.Bool,
@@ -106,7 +79,13 @@ var OpenMicWeekly = t.struct({
 var options = {
   fields: {
     isOpenMicFree: {
-      label: 'Is this Open Mic Free?'
+        label: 'Is this Open Mic Free?'
+    },
+    signUpTime: {
+        mode: 'time',
+    },
+    startTime: {
+        mode: 'time'
     },
     otherNotes: {
         //placeholder: 'Opmerking',
@@ -117,20 +96,20 @@ var options = {
 
 class AddOpenMicForm extends Component {
 
-    static defaultProps = {
-        date: new Date(),
-        timeZoneOffsetInHours: (-1) * (new Date()).getTimezoneOffset() / 60
-    };
+    //static defaultProps = {
+    //    date: new Date(),
+    //    timeZoneOffsetInHours: (-1) * (new Date()).getTimezoneOffset() / 60
+    //};
 
-  constructor(props) {
-      super(props);
-      this.state = {
-          type: OpenMic,
-          value: this.props.openmic ? this.getOpenMicStateFromProp() : null,
-          date: this.props.date,
-          timeZoneOffsetInHours: this.props.timeZoneOffsetInHours
-      };
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            type: OpenMic,
+            value: this.props.openmic ? this.getOpenMicStateFromProp() : null,
+            date: this.props.date,
+            timeZoneOffsetInHours: this.props.timeZoneOffsetInHours
+        };
+    }
 
   getOpenMicStateFromProp(){
       var openMic = this.props.openmic;
@@ -145,8 +124,8 @@ class AddOpenMicForm extends Component {
           state: openMic.state,
           contactEmailAddress: openMic.contact_email_address,
           contactPhoneNumber: openMic.contact_phone_number,
-          signUpTime: openMic.sign_up_time,
-          startTime: openMic.start_time,
+          signUpTime: new Date(openMic.sign_up_time),
+          startTime: new Date(openMic.start_time),
           openMicRegularity: openMic.openmic_regularity,
           openMicWeekDay: openMic.openmic_weekday,
           nextOpenMicDate: openMic.next_openmic_date,
@@ -156,8 +135,8 @@ class AddOpenMicForm extends Component {
   }
 
     onDateChange(date) {
-    this.setState({date: date});
-};
+        this.setState({date: date});
+    };
 
     onTimezoneChange(event) {
     var offset = parseInt(event.nativeEvent.text, 10);
@@ -167,29 +146,28 @@ class AddOpenMicForm extends Component {
     this.setState({timeZoneOffsetInHours: offset});
     };
 
-  saveOpenMic(openmic) {
-    fetch('http://172.25.3.178:3000/api/openmic/save', {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(openmic)
-    }).then((response) => response.text())
-      .then((responseText) => {
-        console.log(responseText);
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
-  }
+  //saveOpenMic(openmic) {
+  //
+  //}
 
   onPress() {
     // call getValue() to get the values of the form
-    var value = this.refs.form.getValue();
-    if (value) { // if validation fails, value will be null
-      console.log(value); // value here is an instance of OpenMic
-      this.saveOpenMic(value);
+    var openmic = this.refs.form.getValue();
+    if (openmic) { // if validation fails, value will be null
+        fetch('http://localhost:3000/api/openmic/save', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(openmic)
+        }).then((response) => {
+                console.log(response.text());
+            })
+            .catch((error) => {
+                console.warn(error);
+            });
+      //this.saveOpenMic(value);
     }
   }
 
@@ -229,38 +207,52 @@ class AddOpenMicForm extends Component {
 }
 
 var styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    marginTop: 50,
-    padding: 20,
-    backgroundColor: '#ffffff',
-  },
-  title: {
-    fontSize: 30,
-    alignSelf: 'center',
-    marginBottom: 30
-  },
-  buttonText: {
-    fontSize: 18,
-    color: 'white',
-    alignSelf: 'center'
-  },
-  button: {
-    height: 36,
-    backgroundColor: '#48BBEC',
-    borderColor: '#48BBEC',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 10,
-    alignSelf: 'stretch',
-    justifyContent: 'center',
-    paddingRight: 8,
-    paddingLeft: 8,
-  },
-  scrollView: {
-    backgroundColor: '#6A85B1',
-    height: 300,
-  }
+    container: {
+        justifyContent: 'center',
+        marginTop: 50,
+        padding: 20,
+        backgroundColor: '#ffffff',
+    },
+    title: {
+        fontSize: 30,
+        alignSelf: 'center',
+        marginBottom: 30
+    },
+    buttonText: {
+        fontSize: 18,
+        color: 'white',
+        alignSelf: 'center'
+    },
+    section: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        padding: 6,
+        backgroundColor: '#2196F3'
+    },
+    rowSection: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        padding: 6,
+        backgroundColor: '#2196F3'
+    },
+    button: {
+        height: 36,
+        backgroundColor: '#48BBEC',
+        borderColor: '#48BBEC',
+        borderWidth: 1,
+        borderRadius: 8,
+        marginBottom: 10,
+        alignSelf: 'stretch',
+        justifyContent: 'center',
+        paddingRight: 8,
+        paddingLeft: 8,
+    },
+    scrollView: {
+        backgroundColor: '#6A85B1',
+        height: 300,
+    }
 });
 
 module.exports = AddOpenMicForm;
