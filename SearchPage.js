@@ -32,7 +32,7 @@ class SearchPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchString: 'New York',
+            searchString: 'Denver',
             isLoading: false,
             message: ''
         };
@@ -42,7 +42,7 @@ class SearchPage extends Component {
         this.setState({isLoading: false});
         if (openmics.length) {
             this.props.navigator.push({
-                title:  ' Open Mics in ' + this.capitalize(this.state.searchString),
+                title: this.capitalize(this.state.searchString),
                 component: SearchResults,
                 passProps: {openmics: openmics}
             });
