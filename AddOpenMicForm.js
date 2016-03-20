@@ -96,18 +96,11 @@ var options = {
 
 class AddOpenMicForm extends Component {
 
-    //static defaultProps = {
-    //    date: new Date(),
-    //    timeZoneOffsetInHours: (-1) * (new Date()).getTimezoneOffset() / 60
-    //};
-
     constructor(props) {
         super(props);
         this.state = {
             type: OpenMic,
             value: this.props.openmic ? this.getOpenMicStateFromProp() : null,
-            date: this.props.date,
-            timeZoneOffsetInHours: this.props.timeZoneOffsetInHours
         };
     }
 
@@ -134,24 +127,7 @@ class AddOpenMicForm extends Component {
       };
   }
 
-    onDateChange(date) {
-        this.setState({date: date});
-    };
-
-    onTimezoneChange(event) {
-    var offset = parseInt(event.nativeEvent.text, 10);
-    if (isNaN(offset)) {
-        return;
-    }
-    this.setState({timeZoneOffsetInHours: offset});
-    };
-
-  //saveOpenMic(openmic) {
-  //
-  //}
-
   onPress() {
-    // call getValue() to get the values of the form
     var openmic = this.refs.form.getValue();
     if (openmic) { // if validation fails, value will be null
         fetch('http://localhost:3000/api/openmic/save', {
@@ -167,7 +143,6 @@ class AddOpenMicForm extends Component {
             .catch((error) => {
                 console.warn(error);
             });
-      //this.saveOpenMic(value);
     }
   }
 
@@ -189,7 +164,6 @@ class AddOpenMicForm extends Component {
         style={styles.scrollView}>
 
         <View style={styles.container}>
-          {/* display */}
           <Form
             ref="form"
             type={this.state.type}
