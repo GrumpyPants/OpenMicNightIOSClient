@@ -123,26 +123,52 @@ class AddOpenMicForm extends Component {
           openMicWeekDay: openMic.openmic_weekday,
           nextOpenMicDate: openMic.next_openmic_date,
           isOpenMicFree: openMic.is_free,
-          otherNotes: openMic.notes
+          otherNotes: openMic.notes,
+          id: openMic.id
       };
   }
 
-  onPress() {
-    var openmic = this.refs.form.getValue();
-    if (openmic) { // if validation fails, value will be null
-        fetch('http://localhost:3000/api/openmic/save', {
+  saveNewOpenMic(openmic) {
+      fetch('http://localhost:3000/api/openmic/save', {
+          method: 'post',
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(openmic)
+      }).then((response) => {
+              console.log(response.text());
+          })
+          .catch((error) => {
+              console.warn(error);
+          });
+  }
+
+    updateOpenMic(id, openmic) {
+        fetch('http://localhost:3000/api/openmic/update', {
             method: 'post',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(openmic)
+            body: JSON.stringify({id, openmic})
         }).then((response) => {
                 console.log(response.text());
             })
             .catch((error) => {
                 console.warn(error);
             });
+    }
+
+  onPress() {
+    var openmic = this.refs.form.getValue();
+    if (openmic) { // if validation fails, value will be null
+        if (this.props.openmic) {
+            this.updateOpenMic(this.props.openmic.id, openmic);
+        }
+        else {
+            this.saveNewOpenMic(openmic)
+        }
     }
   }
 
