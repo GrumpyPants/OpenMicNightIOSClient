@@ -3,7 +3,7 @@
 var React = require('react-native');
 var AddOpenMicForm = require('./AddOpenMicForm');
 var {
-    AlertIOS,
+    Alert,
     StyleSheet,
     Image,
     View,
@@ -45,7 +45,7 @@ class OpenMicView extends Component {
     _submitOpenUrlRequest(url){
         LinkingIOS.canOpenURL(url, (supported) => {
             if (!supported) {
-                AlertIOS.alert('Can\'t handle url: ' + url);
+                Alert.alert('Can\'t handle url: ' + url);
             } else {
                 LinkingIOS.openURL(url);
             }
@@ -136,24 +136,30 @@ class OpenMicView extends Component {
     }
 
     _onFlagForDeletionButtonPressed() {
-        AlertIOS.alert(
+        Alert.alert(
+            'OpenMicNight',
             'Are you sure you want to flag this Open Mic for deletion?',
-            null,
             [
-                {text: 'Yes', onPress: (details) => this._submitDeleteOpenMicRequest},
+                {text: 'Yes', onPress: () => this._submitDeleteOpenMicRequest()},
                 {text: 'Cancel', onPress: () => console.log('Cancel'), style: 'cancel'}
             ]
         )
     }
 
     _submitDeleteOpenMicRequest(){
-        var queryString = Object.keys(this.props.openmic)
-            .map(key => key + '=' + encodeURIComponent(this.props.openmic[key]))
-            .join('&');
-        fetch('http://localhost:3000/api/openmic/flagForDeletion?' + queryString)
-            .catch(error => {
-            console.log(error)
-            });
+        let id = this.props.openmic.id;
+        fetch('http://localhost:3000/api/openmic/flagForDeletion', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({id})
+        }).then((response) => {
+            this.props.navigator.popToTop();
+        }).catch((error) => {
+            console.warn(error);
+        });
     }
 
     _extractTimeFromDate(dateString){
