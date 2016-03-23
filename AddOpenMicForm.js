@@ -1,6 +1,8 @@
 var React = require('react-native');
+var OpenMicView = require('./OpenMicView');
 var t = require('tcomb-form-native');
 var {
+  Alert,
   AppRegistry,
   StyleSheet,
   ScrollView,
@@ -137,7 +139,13 @@ class AddOpenMicForm extends Component {
           },
           body: JSON.stringify(openmic)
       }).then((response) => {
-              console.log(response.text());
+              Alert.alert(
+                  'OpenMic Saved',
+                  openmic.openMicName + ' was saved successfully.',
+                  [
+                      {text: 'OK', onPress: () => this.props.navigator.popToTop()},
+                  ]
+              );
           })
           .catch((error) => {
               console.warn(error);
@@ -153,11 +161,17 @@ class AddOpenMicForm extends Component {
             },
             body: JSON.stringify({id, openmic})
         }).then((response) => {
-                console.log(response.text());
-            })
-            .catch((error) => {
-                console.warn(error);
-            });
+            Alert.alert(
+                'OpenMic Updated',
+                openmic.openMicName + ' was updated successfully.',
+                [
+                    {text: 'OK', onPress: () => this.props.navigator.popToTop()},
+                ]
+            );
+        })
+        .catch((error) => {
+            console.warn(error);
+        });
     }
 
   onPress() {
