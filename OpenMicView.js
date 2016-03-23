@@ -83,6 +83,15 @@ class OpenMicView extends Component {
             );
         }
 
+        if (!openmic.is_free) {
+            images.push(
+                <View style={styles.imageContainer}>
+                    <Image style={styles.performerIcon} source={require('./img/money.png')}/>
+                    <Text style={styles.valueText}>Pay to Perform</Text>
+                </View>
+            );
+        }
+
         return images;
     }
 
