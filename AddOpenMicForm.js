@@ -200,7 +200,6 @@ class AddOpenMicForm extends Component {
     return (
       <ScrollView
         scrollEventThrottle={200}
-        contentInset={{top: -50}}
         style={styles.scrollView}>
 
         <View style={styles.container}>
@@ -223,7 +222,6 @@ class AddOpenMicForm extends Component {
 var styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
-        marginTop: 50,
         padding: 20,
         backgroundColor: '#ffffff',
     },
