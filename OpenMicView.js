@@ -172,9 +172,14 @@ class OpenMicView extends Component {
     }
 
     _extractTimeFromDate(dateString){
-        let timeArray = new Date(dateString).toLocaleTimeString().split(':');
-        timeArray[2] = timeArray[2].slice(3);
-        return timeArray.join(':');
+        if (dateString.split(':').length === 2) {
+            return dateString;
+        }
+        else {
+            let timeArray = new Date(dateString).toLocaleTimeString().split(':');
+            timeArray[2] = timeArray[2].slice(3);
+            return timeArray.join(':');
+        }
     }
 
     render() {
