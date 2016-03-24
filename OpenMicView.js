@@ -202,7 +202,7 @@ class OpenMicView extends Component {
 
                     <View>
                         <Text style={styles.sectionHeaderText}>DATE</Text>
-                        <Text style={styles.valueText}>1/14/1988</Text>
+                        <Text style={styles.valueText}>{openmic.date}</Text>
                     </View>
                 <View style={styles.separator}/>
 

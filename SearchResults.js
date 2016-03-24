@@ -174,6 +174,7 @@ Object.assign(SearchResults.prototype, {
       );
     },
     onPressRow : function (rowData, sectionID) {
+    rowData.date = this.state.dataSource._getSectionHeaderData(this.state.dataSource._dataBlob, sectionID);
       this.props.navigator.push({
         title: rowData.openmic_name ? rowData.openmic_name : 'Open Mic at ' + rowData.venue_name,
         component: OpenMicView,
