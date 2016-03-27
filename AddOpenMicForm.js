@@ -48,7 +48,7 @@ var OpenMic = t.struct({
   startTime: t.Date,
   openMicRegularity: Regularity,
   openMicWeekDay: WeekDay,
-  nextOpenMicDate: t.Str,
+  nextOpenMicDate: t.Date,
   isOpenMicFree:t.Bool,
   otherNotes: t.maybe(t.Str)
 });
@@ -74,7 +74,7 @@ var OpenMicWeekly = t.struct({
   thursday: t.Bool,
   friday: t.Bool,
   saturday: t.Bool,
-  nextOpenMicDate: t.Str,
+  nextOpenMicDate: t.Date,
   isOpenMicFree:t.Bool,
   otherNotes: t.maybe(t.Str)
 });
@@ -89,6 +89,10 @@ var options = {
     },
     startTime: {
         mode: 'time'
+    },
+    nextOpenMicDate: {
+        mode: 'date',
+        minimumDate: moment().toDate()
     },
     otherNotes: {
         //placeholder: 'Opmerking',
@@ -123,6 +127,7 @@ class AddOpenMicForm extends Component {
       var openMic = this.props.openmic;
       var signUpTime = moment(openMic.sign_up_time, 'hh:mma').toDate();
       var startTime = moment(openMic.start_time, 'hh:mma').toDate();
+      var nextOpenMicDate = moment(openMic.next_openmic_date).toDate();
       var openmicWeekDay = this.getSelectedOpenMicWeekday(openMic);
       return {
           openMicName: openMic.name,
@@ -139,7 +144,7 @@ class AddOpenMicForm extends Component {
           startTime: startTime,
           openMicRegularity: openMic.regularity,
           openMicWeekDay: openmicWeekDay,
-          nextOpenMicDate: openMic.next_openmic_date,
+          nextOpenMicDate: nextOpenMicDate,
           isOpenMicFree: openMic.is_free,
           otherNotes: openMic.notes,
           monday: openMic.monday,
