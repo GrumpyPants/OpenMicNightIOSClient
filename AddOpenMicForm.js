@@ -125,8 +125,9 @@ class AddOpenMicForm extends Component {
 
   getOpenMicStateFromProp(){
       var openMic = this.props.openmic;
-      var signUpTime = moment(openMic.sign_up_time, 'hh:mma').toDate();
-      var startTime = moment(openMic.start_time, 'hh:mma').toDate();
+      var signUpTime = moment(this.extractTimeFromDate(openMic.sign_up_time), 'hh:mma').toDate();
+      var startTime = moment(this.extractTimeFromDate(openMic.start_time), 'hh:mma').toDate();
+      //var startTime = moment(this.extractTimeFromDate(openMic.start_time), 'hh:mma').toDate();
       var nextOpenMicDate = moment(openMic.next_openmic_date).toDate();
       var openmicWeekDay = this.getSelectedOpenMicWeekday(openMic);
       return {
@@ -157,6 +158,17 @@ class AddOpenMicForm extends Component {
           id: openMic.id
       };
   };
+
+    extractTimeFromDate(dateString){
+        if (dateString.split(':').length === 2) {
+            return dateString;
+        }
+        else {
+            let timeArray = new Date(dateString).toLocaleTimeString().split(':');
+            timeArray[2] = timeArray[2].slice(3);
+            return timeArray.join(':');
+        }
+    }
 
     getSelectedOpenMicWeekday(openMic){
     var {monday, wednesday, tuesday, thursday, friday, saturday, sunday} = openMic;

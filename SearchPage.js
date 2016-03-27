@@ -32,7 +32,7 @@ class SearchPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchString: 'Denver',
+            searchString: 'New York',
             isLoading: false,
             message: ''
         };
