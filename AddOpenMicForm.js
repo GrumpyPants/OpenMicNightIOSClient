@@ -38,7 +38,7 @@ var OpenMic = t.struct({
   comedians: t.Bool,
   musicians: t.Bool,
   poets: t.Bool,
-  venueName: t.maybe(t.Str),
+  venueName: t.Str,
   venueAddress: t.Str,
   city: t.Str,
   state: t.Str,
@@ -58,7 +58,7 @@ var OpenMicWeekly = t.struct({
   comedians: t.Bool,
   musicians: t.Bool,
   poets: t.Bool,
-  venueName: t.maybe(t.Str),
+  venueName: t.Str,
   venueAddress: t.Str,
   city: t.Str,
   state: t.Str,
@@ -218,7 +218,7 @@ class AddOpenMicForm extends Component {
   onPress() {
     var openmic = this.refs.form.getValue();
 
-    if (!this.isWeekdayAndNextOpenMicDateValid(openmic)) {
+    if (openmic && !this.isWeekdayAndNextOpenMicDateValid(openmic)) {
         openmic = null;
         Alert.alert(
             'OpenMic Weekday is invalid',
@@ -228,7 +228,6 @@ class AddOpenMicForm extends Component {
             ]
         );
     }
-
 
     if (openmic) { // if validation fails, value will be null
         if (this.props.openmic) {
