@@ -1,6 +1,7 @@
 var React = require('react-native');
 var OpenMicView = require('./OpenMicView');
 var t = require('tcomb-form-native');
+var moment = require('moment');
 var {
   Alert,
   AppRegistry,
@@ -28,7 +29,7 @@ var WeekDay = t.enums({
 
 var Regularity = t.enums({
   'weekly': 'Weekly',
-  'bi-weekly': 'Bi-weekly',
+  'biweekly': 'Bi-weekly',
   'monthly': 'Monthly'
 });
 
@@ -100,16 +101,31 @@ class AddOpenMicForm extends Component {
 
     constructor(props) {
         super(props);
+
+        var openMic = this.props.openmic ? this.getOpenMicStateFromProp() : null;
+
+        var openMicType = null;
+
+        if (openMic && openMic.openMicRegularity === 'weekly') {
+            openMicType = OpenMicWeekly;
+        }
+        else{
+            openMicType = OpenMic;
+        }
+
         this.state = {
-            type: OpenMic,
-            value: this.props.openmic ? this.getOpenMicStateFromProp() : null,
+            type: openMicType,
+            value: openMic,
         };
     }
 
   getOpenMicStateFromProp(){
       var openMic = this.props.openmic;
+      var signUpTime = moment(openMic.sign_up_time, 'hh:mma').toDate();
+      var startTime = moment(openMic.start_time, 'hh:mma').toDate();
+      var openmicWeekDay = this.getSelectedOpenMicWeekday(openMic);
       return {
-          openMicName: openMic.openmic_name,
+          openMicName: openMic.name,
           comedians: openMic.comedian,
           musicians: openMic.musician,
           poets: openMic.poet,
@@ -119,16 +135,36 @@ class AddOpenMicForm extends Component {
           state: openMic.state,
           contactEmailAddress: openMic.contact_email_address,
           contactPhoneNumber: openMic.contact_phone_number,
-          signUpTime: new Date(openMic.sign_up_time),
-          startTime: new Date(openMic.start_time),
-          openMicRegularity: openMic.openmic_regularity,
-          openMicWeekDay: openMic.openmic_weekday,
+          signUpTime: signUpTime,
+          startTime: startTime,
+          openMicRegularity: openMic.regularity,
+          openMicWeekDay: openmicWeekDay,
           nextOpenMicDate: openMic.next_openmic_date,
           isOpenMicFree: openMic.is_free,
           otherNotes: openMic.notes,
+          monday: openMic.monday,
+          tuesday: openMic.tuesday,
+          wednesday: openMic.wednesday,
+          thursday: openMic.thursday,
+          friday: openMic.friday,
+          saturday: openMic.saturday,
+          sunday: openMic.sunday,
           id: openMic.id
       };
-  }
+  };
+
+    getSelectedOpenMicWeekday(openMic){
+    var {monday, wednesday, tuesday, thursday, friday, saturday, sunday} = openMic;
+    for (var key in openMic) {
+        if (openMic.hasOwnProperty(key) && (key === 'monday' || key === 'tuesday' || key === 'wednesday' ||
+            key === 'thursday' || key === 'friday' || key === 'saturday' || key === 'sunday')) {
+
+            if (openMic[key]) {
+                return key;
+            }
+        }
+    }
+  };
 
   saveNewOpenMic(openmic) {
       fetch('http://localhost:3000/api/openmic/save', {
@@ -176,6 +212,19 @@ class AddOpenMicForm extends Component {
 
   onPress() {
     var openmic = this.refs.form.getValue();
+
+    if (!this.isWeekdayAndNextOpenMicDateValid(openmic)) {
+        openmic = null;
+        Alert.alert(
+            'OpenMic Weekday is invalid',
+            'The Next OpenMic Date you have provided does not land on the Weekday you have provided. Please select a Weekday that aligns with the Next OpenMic Date',
+            [
+                {text: 'OK'},
+            ]
+        );
+    }
+
+
     if (openmic) { // if validation fails, value will be null
         if (this.props.openmic) {
             this.updateOpenMic(this.props.openmic.id, openmic);
@@ -184,6 +233,23 @@ class AddOpenMicForm extends Component {
             this.saveNewOpenMic(openmic)
         }
     }
+  }
+
+  isWeekdayAndNextOpenMicDateValid(openmic){
+    var isValid = false;
+    var weekday = moment(openmic.nextOpenMicDate).format('dddd').toLowerCase();
+    if (openmic.openMicWeekDay && weekday === openmic.openMicWeekDay) {
+        // validate against weekday
+        isValid = true;
+    }
+    else {
+        //validate against list of weekdays
+        if (openmic[weekday]) {
+            isValid = true;
+        }
+    }
+
+    return isValid;
   }
 
   onChange(value) {
