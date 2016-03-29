@@ -4,6 +4,7 @@ var React = require('react-native');
 var SearchResults = require('./SearchResults');
 var AddOpenMicForm = require('./AddOpenMicForm');
 var {
+    Alert,
     StyleSheet,
     Text,
     TextInput,
@@ -24,7 +25,7 @@ function urlForQueryAndPage(key, value) {
         .map(key => key + '=' + encodeURIComponent(data[key]))
         .join('&');
 
-    return 'http://localhost:3000/api/openmic/listForCity?' + querystring;
+    return 'http://10.0.0.189:3000/api/openmic/listForCity?' + querystring;
 };
 
 class SearchPage extends Component {
@@ -65,8 +66,19 @@ class SearchPage extends Component {
     }
 
     onSearchPressed() {
-        var query = urlForQueryAndPage('place_name', this.state.searchString);
-        this._executeQuery(query);
+        if (!this.state.searchString) {
+            Alert.alert(
+                'OpenMicNight',
+                'Please enter a city name.',
+                [
+                    {text: 'Ok'},
+                ]
+            )
+        }
+        else{
+            var query = urlForQueryAndPage('place_name', this.state.searchString);
+            this._executeQuery(query);
+        }
     }
 
     onAddOpenMicButtonPressed() {

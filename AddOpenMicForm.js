@@ -184,7 +184,7 @@ class AddOpenMicForm extends Component {
   };
 
   saveNewOpenMic(openmic) {
-      fetch('http://localhost:3000/api/openmic/save', {
+      fetch('http://10.0.0.189:3000/api/openmic/save', {
           method: 'post',
           headers: {
               'Accept': 'application/json',
@@ -206,7 +206,7 @@ class AddOpenMicForm extends Component {
   }
 
     updateOpenMic(id, openmic) {
-        fetch('http://localhost:3000/api/openmic/update', {
+        fetch('http://10.0.0.189:3000/api/openmic/update', {
             method: 'post',
             headers: {
                 'Accept': 'application/json',

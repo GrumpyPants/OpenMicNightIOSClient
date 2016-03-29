@@ -157,7 +157,7 @@ class OpenMicView extends Component {
 
     _submitDeleteOpenMicRequest(){
         let id = this.props.openmic.id;
-        fetch('http://localhost:3000/api/openmic/flagForDeletion', {
+        fetch('http://10.0.0.189:3000/api/openmic/flagForDeletion', {
             method: 'post',
             headers: {
                 'Accept': 'application/json',
@@ -236,13 +236,13 @@ class OpenMicView extends Component {
                     <TouchableHighlight style={styles.button}
                                         onPress={this._onEditOpenMicButtonPressed.bind(this)}
                                         underlayColor='#99d9f4'>
-                        <Text style={styles.buttonText}>Edit Open Mic</Text>
+                        <Text style={styles.buttonText}>Edit</Text>
                     </TouchableHighlight>
 
                     <TouchableHighlight style={styles.deleteButton}
                                         onPress={this._onFlagForDeletionButtonPressed.bind(this, true)}
                                         underlayColor='#ac2925'>
-                        <Text style={styles.buttonText}>Flag for Deletion</Text>
+                        <Text style={styles.buttonText}>Flag</Text>
                     </TouchableHighlight>
                 </View>
 
