@@ -235,8 +235,8 @@ class OpenMicView extends Component {
                         <Text style={styles.description}>{openmic.notes}</Text>
                     </View>
 
-                    <View style={styles.editOpenMicButtonContainer}>
-                        <TouchableHighlight style={styles.button}
+                    <View style={styles.buttonContainer}>
+                        <TouchableHighlight style={styles.editButton}
                                             onPress={this._onEditOpenMicButtonPressed.bind(this)}
                                             underlayColor='#99d9f4'>
                             <Text style={styles.buttonText}>Edit</Text>
@@ -327,13 +327,14 @@ var styles = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
     },
-    button: {
+    editButton: {
         height: 36,
         backgroundColor: '#48BBEC',
         borderColor: '#48BBEC',
         borderWidth: 1,
         borderRadius: 8,
         margin: 10,
+        flex: .5,
         alignSelf: 'stretch',
         justifyContent: 'center'
     },
@@ -342,13 +343,15 @@ var styles = StyleSheet.create({
         backgroundColor: '#d9534f',
         borderColor: '#d43f3a',
         borderWidth: 1,
+        flex: .5,
         borderRadius: 8,
         margin: 10,
         alignSelf: 'stretch',
         justifyContent: 'center'
     },
-    editOpenMicButtonContainer: {
+    buttonContainer: {
         flexDirection: 'row',
+        flex: 1,
         justifyContent: 'center'
     },
     banner: {
