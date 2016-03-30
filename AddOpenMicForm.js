@@ -344,7 +344,6 @@ var styles = StyleSheet.create({
         paddingLeft: 8,
     },
     scrollView: {
-        backgroundColor: '#6A85B1',
         height: 300,
     }
 });
