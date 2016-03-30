@@ -3,8 +3,11 @@
 var React = require('react-native');
 var OpenMicView = require('./OpenMicView');
 var AddOpenMicForm = require('./AddOpenMicForm');
+var Banner = require('react-native-admob').AdMobBanner;
+
 var {
     StyleSheet,
+    ScrollView,
     Text,
     View,
     ListView,
@@ -102,7 +105,16 @@ class SearchResults extends Component {
     }
 
     if (this.state.dataSource.getRowCount() > 0) {
-        return this.renderListView();
+
+        return (
+            <View style={{flex: 1}}>
+                {this.renderListView()}
+                <Banner
+                    style={styles.banner}
+                    bannerSize={'smartBannerPortrait'}
+                    adUnitID={'ca-app-pub-3940256099942544/2934735716'} />
+            </View>
+        );
     }
     else{
         return this.renderNoOpenMicsFoundView();

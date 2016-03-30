@@ -3,6 +3,8 @@
 var React = require('react-native');
 var SearchResults = require('./SearchResults');
 var AddOpenMicForm = require('./AddOpenMicForm');
+var Banner = require('react-native-admob').AdMobBanner;
+
 var {
     Alert,
     StyleSheet,
@@ -25,10 +27,11 @@ function urlForQueryAndPage(key, value) {
         .map(key => key + '=' + encodeURIComponent(data[key]))
         .join('&');
 
-    return 'http://10.0.0.189:3000/api/openmic/listForCity?' + querystring;
+    return 'http://localhost:3000/api/openmic/listForCity?' + querystring;
 };
 
 class SearchPage extends Component {
+    static BannerAdUnitId = 'ca-app-pub-3940256099942544/2934735716';
 
     constructor(props) {
         super(props);
@@ -93,6 +96,10 @@ class SearchPage extends Component {
         this.setState({searchString: event.nativeEvent.text});
     }
 
+    capitalize(string) {
+        return string[0].toUpperCase() + string.slice(1);
+    }
+
     render() {
         var spinner = this.state.isLoading ?
             ( <ActivityIndicatorIOS
@@ -101,44 +108,48 @@ class SearchPage extends Component {
             ( <View/>);
 
         return (
-            <ScrollView>
-                <View style={styles.container}>
-                <Text style={styles.description}>
-                    Find Open Mics in your area!
-                </Text>
+            <View style={{flex: 1}}>
+                <ScrollView>
+                    <View style={styles.parentContainer}>
+                        <View style={styles.container}>
+                            <Text style={styles.description}>
+                                Find Open Mics in your area!
+                            </Text>
 
-                <Image source={require('./img/microphone.png')} style={styles.image}/>
+                            <Image source={require('./img/microphone.png')} style={styles.image}/>
 
-                <Text style={styles.description}>
-                    Search by city name.
-                </Text>
-                <View style={styles.flowRight}>
-                    <TextInput
-                        style={styles.searchInput}
-                        placeholder='Search via city name'
-                        value={this.state.searchString}
-                        onChange={this.onSearchTextChanged.bind(this)}/>
-                    <TouchableHighlight style={styles.button}
-                                        underlayColor='#99d9f4'
-                                        onPress={this.onSearchPressed.bind(this)}>
-                        <Text style={styles.buttonText}>Go</Text>
-                    </TouchableHighlight>
-                </View>
-                <TouchableHighlight style={styles.button}
-                                    onPress={this.onAddOpenMicButtonPressed.bind(this)}
-                                    underlayColor='#99d9f4'>
-                    <Text style={styles.buttonText}>Add an Open Mic</Text>
-                </TouchableHighlight>
-                {spinner}
-                <Text style={styles.description}>{this.state.message}</Text>
-                </View>
-            </ScrollView>
+                            <Text style={styles.description}>
+                                Search by city name.
+                            </Text>
+                        <View style={styles.flowRight}>
+                            <TextInput
+                                style={styles.searchInput}
+                                placeholder='Search via city name'
+                                value={this.state.searchString}
+                                onChange={this.onSearchTextChanged.bind(this)}/>
+                            <TouchableHighlight style={styles.button}
+                                                underlayColor='#99d9f4'
+                                                onPress={this.onSearchPressed.bind(this)}>
+                                <Text style={styles.buttonText}>Go</Text>
+                            </TouchableHighlight>
+                        </View>
+                            <TouchableHighlight style={styles.button}
+                                                onPress={this.onAddOpenMicButtonPressed.bind(this)}
+                                                underlayColor='#99d9f4'>
+                                <Text style={styles.buttonText}>Add an Open Mic</Text>
+                            </TouchableHighlight>
+                            {spinner}
+                            <Text style={styles.description}>{this.state.message}</Text>
+                        </View>
+                    </View>
+                </ScrollView>
+
+                <Banner
+                    style={styles.banner}
+                    bannerSize={'smartBannerPortrait'}
+                    adUnitID={SearchPage.BannerAdUnitId} />
+            </View>
         );
-    }
-
-    capitalize(string)
-    {
-        return string[0].toUpperCase() + string.slice(1);
     }
 }
 
@@ -150,8 +161,16 @@ var styles = StyleSheet.create({
         color: '#656565'
     },
     container: {
-        padding: 30,
+        paddingTop: 80,
+        paddingLeft: 30,
+        paddingRight: 30,
+        paddingBottom: 80,
         alignItems: 'center'
+    },
+    parentContainer: {
+        flex: 1,
+        //justifyContent: 'flex-end',
+        //alignItems: 'flex-end'
     },
     flowRight: {
         flexDirection: 'row',
@@ -189,6 +208,9 @@ var styles = StyleSheet.create({
     image: {
         width: 100,
         height: 200
+    },
+    banner: {
+        backgroundColor: '#055'
     }
 });
 

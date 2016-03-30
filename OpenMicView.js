@@ -2,6 +2,8 @@
 
 var React = require('react-native');
 var AddOpenMicForm = require('./AddOpenMicForm');
+var Banner = require('react-native-admob').AdMobBanner;
+
 var {
     Alert,
     StyleSheet,
@@ -157,7 +159,7 @@ class OpenMicView extends Component {
 
     _submitDeleteOpenMicRequest(){
         let id = this.props.openmic.id;
-        fetch('http://10.0.0.189:3000/api/openmic/flagForDeletion', {
+        fetch('http://localhost:3000/api/openmic/flagForDeletion', {
             method: 'post',
             headers: {
                 'Accept': 'application/json',
@@ -185,68 +187,74 @@ class OpenMicView extends Component {
     render() {
         var openmic = this.props.openmic;
         return (
-            <ScrollView style={styles.container}>
-                <View style={styles.sectionContainerOuter}>
-                    <View style={styles.locationInner}>
-                        <Text style={styles.sectionHeaderText}>LOCATION</Text>
-                        <Text style={styles.valueText}>{openmic.venue_name}</Text>
+            <View style={{flex: 1}}>
+                <ScrollView style={styles.container}>
+                    <View style={styles.sectionContainerOuter}>
+                        <View style={styles.locationInner}>
+                            <Text style={styles.sectionHeaderText}>LOCATION</Text>
+                            <Text style={styles.valueText}>{openmic.venue_name}</Text>
+                        </View>
+                        <TouchableHighlight onPress={this._onOpenNavigation.bind(this)}>
+                            <Image
+                                style={styles.navigationIcon}
+                                source={require('./img/navigation.png')}
+                            />
+                        </TouchableHighlight>
                     </View>
-                    <TouchableHighlight onPress={this._onOpenNavigation.bind(this)}>
-                        <Image
-                            style={styles.navigationIcon}
-                            source={require('./img/navigation.png')}
-                        />
-                    </TouchableHighlight>
-                </View>
-                <View style={styles.separator}/>
+                    <View style={styles.separator}/>
 
-                    <View>
-                        <Text style={styles.sectionHeaderText}>DATE</Text>
-                        <Text style={styles.valueText}>{openmic.date}</Text>
-                    </View>
-                <View style={styles.separator}/>
+                        <View>
+                            <Text style={styles.sectionHeaderText}>DATE</Text>
+                            <Text style={styles.valueText}>{openmic.date}</Text>
+                        </View>
+                    <View style={styles.separator}/>
 
-                <View style={styles.sectionContainerOuter}>
-                    <View style={styles.signUpTimeContainer}>
-                        <Text style={styles.sectionHeaderText}>SIGN UP TIME</Text>
-                        <Text style={styles.valueText}>{this._extractTimeFromDate(openmic.sign_up_time)}</Text>
+                    <View style={styles.sectionContainerOuter}>
+                        <View style={styles.signUpTimeContainer}>
+                            <Text style={styles.sectionHeaderText}>SIGN UP TIME</Text>
+                            <Text style={styles.valueText}>{this._extractTimeFromDate(openmic.sign_up_time)}</Text>
+                        </View>
+
+                        <View style={styles.startTimeContainer}>
+                            <Text style={styles.sectionHeaderText}>START TIME</Text>
+                            <Text style={styles.valueText}>{this._extractTimeFromDate(openmic.start_time)}</Text>
+                        </View>
                     </View>
+                    <View style={styles.separator}/>
+
+                    <View style={styles.performerSectionContainerOuter}>
+                        {this._getPerformerImages()}
+                    </View>
+                    <View style={styles.separator}/>
+
+
+                    {this._getContactSection()}
 
                     <View style={styles.startTimeContainer}>
-                        <Text style={styles.sectionHeaderText}>START TIME</Text>
-                        <Text style={styles.valueText}>{this._extractTimeFromDate(openmic.start_time)}</Text>
+                        <Text style={styles.sectionHeaderText}>NOTES</Text>
+                        <Text style={styles.description}>{openmic.notes}</Text>
                     </View>
-                </View>
-                <View style={styles.separator}/>
 
-                <View style={styles.performerSectionContainerOuter}>
-                    {this._getPerformerImages()}
-                </View>
-                <View style={styles.separator}/>
+                    <View style={styles.editOpenMicButtonContainer}>
+                        <TouchableHighlight style={styles.button}
+                                            onPress={this._onEditOpenMicButtonPressed.bind(this)}
+                                            underlayColor='#99d9f4'>
+                            <Text style={styles.buttonText}>Edit</Text>
+                        </TouchableHighlight>
 
+                        <TouchableHighlight style={styles.deleteButton}
+                                            onPress={this._onFlagForDeletionButtonPressed.bind(this, true)}
+                                            underlayColor='#ac2925'>
+                            <Text style={styles.buttonText}>Flag</Text>
+                        </TouchableHighlight>
+                    </View>
+                </ScrollView>
 
-                {this._getContactSection()}
-
-                <View style={styles.startTimeContainer}>
-                    <Text style={styles.sectionHeaderText}>NOTES</Text>
-                    <Text style={styles.description}>{openmic.notes}</Text>
-                </View>
-
-                <View style={styles.editOpenMicButtonContainer}>
-                    <TouchableHighlight style={styles.button}
-                                        onPress={this._onEditOpenMicButtonPressed.bind(this)}
-                                        underlayColor='#99d9f4'>
-                        <Text style={styles.buttonText}>Edit</Text>
-                    </TouchableHighlight>
-
-                    <TouchableHighlight style={styles.deleteButton}
-                                        onPress={this._onFlagForDeletionButtonPressed.bind(this, true)}
-                                        underlayColor='#ac2925'>
-                        <Text style={styles.buttonText}>Flag</Text>
-                    </TouchableHighlight>
-                </View>
-
-            </ScrollView>
+                <Banner
+                    style={styles.banner}
+                    bannerSize={'smartBannerPortrait'}
+                    adUnitID={'ca-app-pub-3940256099942544/2934735716'} />
+            </View>
         );
     }
 };
@@ -255,6 +263,7 @@ var styles = StyleSheet.create({
     container: {
         marginLeft: 10,
         marginRight: 10,
+        marginBottom:20
     },
     separator: {
         height: 1,
@@ -263,7 +272,7 @@ var styles = StyleSheet.create({
     description: {
     },
     signUpTimeContainer: {
-    flex: 1,
+        flex: 1,
     },
     startTimeContainer: {
         justifyContent: 'flex-start'
@@ -341,6 +350,9 @@ var styles = StyleSheet.create({
     editOpenMicButtonContainer: {
         flexDirection: 'row',
         justifyContent: 'center'
+    },
+    banner: {
+        backgroundColor: '#055'
     }
 });
 
