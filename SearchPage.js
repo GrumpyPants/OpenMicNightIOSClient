@@ -18,9 +18,18 @@ var {
     Component
 } = React;
 
-function urlForQueryAndPage(key, value) {
+const DropDown = require('react-native-dropdown');
+const {
+    Select,
+    Option,
+    OptionList,
+    updatePosition
+    } = DropDown;
+
+function urlForQueryAndPage(key, city, state) {
     var data = {
-        city: value
+        city: city,
+        state: state
     };
 
     var querystring = Object.keys(data)
@@ -36,10 +45,15 @@ class SearchPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchString: 'New York',
+            //searchString: 'New York',
             isLoading: false,
             message: ''
         };
+    }
+
+    componentDidMount() {
+        updatePosition(this.refs['SELECT2']);
+        updatePosition(this.refs['OPTIONLIST']);
     }
 
     _handleResponse(openmics) {
@@ -79,7 +93,7 @@ class SearchPage extends Component {
             )
         }
         else{
-            var query = urlForQueryAndPage('place_name', this.state.searchString);
+            var query = urlForQueryAndPage('place_name', this.state.searchString, this.state.usa);
             this._executeQuery(query);
         }
     }
@@ -100,6 +114,17 @@ class SearchPage extends Component {
         return string[0].toUpperCase() + string.slice(1);
     }
 
+    getOptionList() {
+        return this.refs['OPTIONLIST'];
+    }
+
+    onStateSelect(state) {
+        this.setState({
+            ...this.state,
+            usa: state
+        });
+    }
+
     render() {
         var spinner = this.state.isLoading ?
             ( <ActivityIndicatorIOS
@@ -118,28 +143,93 @@ class SearchPage extends Component {
 
                             <Image source={require('./img/microphone.png')} style={styles.image}/>
 
-                            <Text style={styles.description}>
-                                Search by city name.
-                            </Text>
-                        <View style={styles.flowRight}>
-                            <TextInput
-                                style={styles.searchInput}
-                                placeholder='Search via city name'
-                                value={this.state.searchString}
-                                onChange={this.onSearchTextChanged.bind(this)}/>
-                            <TouchableHighlight style={styles.button}
-                                                underlayColor='#99d9f4'
-                                                onPress={this.onSearchPressed.bind(this)}>
-                                <Text style={styles.buttonText}>Go</Text>
-                            </TouchableHighlight>
-                        </View>
-                            <TouchableHighlight style={styles.button}
+                            <View style={styles.flowRight}>
+                                <TextInput
+                                    style={styles.searchInput}
+                                    placeholder='Search via city name'
+                                    value={this.state.searchString}
+                                    onChange={this.onSearchTextChanged.bind(this)}/>
+                            </View>
+
+                            <View style={styles.flowRight}>
+
+                                <Select
+                                    width={250}
+                                    height={36}
+                                    ref="SELECT2"
+                                    optionListRef={this.getOptionList.bind(this)}
+                                    defaultValue="Select a State ..."
+                                    onSelect={this.onStateSelect.bind(this)}
+                                    styleOption={styles.selectedOption}
+                                    style={styles.selectDropDown}>
+                                    <Option>Alabama</Option>
+                                    <Option>Alaska</Option>
+                                    <Option>Arizona</Option>
+                                    <Option>Arkansas</Option>
+                                    <Option>California</Option>
+                                    <Option>Colorado</Option>
+                                    <Option>Connecticut</Option>
+                                    <Option>Delaware</Option>
+                                    <Option>District Of Columbia</Option>
+                                    <Option>Florida</Option>
+                                    <Option>Georgia</Option>
+                                    <Option>Hawaii</Option>
+                                    <Option>Idaho</Option>
+                                    <Option>Illinois</Option>
+                                    <Option>Indiana</Option>
+                                    <Option>Iowa</Option>
+                                    <Option>Kansas</Option>
+                                    <Option>Kentucky</Option>
+                                    <Option>Louisiana</Option>
+                                    <Option>Maine</Option>
+                                    <Option>Maryland</Option>
+                                    <Option>Massachusetts</Option>
+                                    <Option>Michigan</Option>
+                                    <Option>Minnesota</Option>
+                                    <Option>Mississippi</Option>
+                                    <Option>Missouri</Option>
+                                    <Option>Montana</Option>
+                                    <Option>Nebraska</Option>
+                                    <Option>Nevada</Option>
+                                    <Option>New Hampshire</Option>
+                                    <Option>New Jersey</Option>
+                                    <Option>New Mexico</Option>
+                                    <Option>New York</Option>
+                                    <Option>North Carolina</Option>
+                                    <Option>North Dakota</Option>
+                                    <Option>Ohio</Option>
+                                    <Option>Oklahoma</Option>
+                                    <Option>Oregon</Option>
+                                    <Option>Pennsylvania</Option>
+                                    <Option>Rhode Island</Option>
+                                    <Option>South Carolina</Option>
+                                    <Option>South Dakota</Option>
+                                    <Option>Tennessee</Option>
+                                    <Option>Texas</Option>
+                                    <Option>Utah</Option>
+                                    <Option>Vermont</Option>
+                                    <Option>Virginia</Option>
+                                    <Option>Washington</Option>
+                                    <Option>West Virginia</Option>
+                                    <Option>Wisconsin</Option>
+                                    <Option>Wyoming</Option>
+                                </Select>
+
+                                <OptionList ref="OPTIONLIST"/>
+
+                                <TouchableHighlight style={styles.goButton}
+                                                    underlayColor='#99d9f4'
+                                                    onPress={this.onSearchPressed.bind(this)}>
+                                    <Text style={styles.buttonText}>Go</Text>
+                                </TouchableHighlight>
+                            </View>
+                            {spinner}
+                            <Text style={styles.description}>{this.state.message}</Text>
+                            <TouchableHighlight style={styles.addMicbutton}
                                                 onPress={this.onAddOpenMicButtonPressed.bind(this)}
                                                 underlayColor='#99d9f4'>
                                 <Text style={styles.buttonText}>Add an Open Mic</Text>
                             </TouchableHighlight>
-                            {spinner}
-                            <Text style={styles.description}>{this.state.message}</Text>
                         </View>
                     </View>
                 </ScrollView>
@@ -155,13 +245,12 @@ class SearchPage extends Component {
 
 var styles = StyleSheet.create({
     description: {
-        marginBottom: 20,
         fontSize: 18,
         textAlign: 'center',
         color: '#656565'
     },
     container: {
-        paddingTop: 80,
+        paddingTop: 10,
         paddingLeft: 30,
         paddingRight: 30,
         paddingBottom: 80,
@@ -169,8 +258,6 @@ var styles = StyleSheet.create({
     },
     parentContainer: {
         flex: 1,
-        //justifyContent: 'flex-end',
-        //alignItems: 'flex-end'
     },
     flowRight: {
         flexDirection: 'row',
@@ -182,7 +269,7 @@ var styles = StyleSheet.create({
         color: 'white',
         alignSelf: 'center'
     },
-    button: {
+    goButton: {
         height: 36,
         flex: 1,
         flexDirection: 'row',
@@ -190,9 +277,32 @@ var styles = StyleSheet.create({
         borderColor: '#2196f3',
         borderWidth: 1,
         borderRadius: 8,
+        marginTop: 5,
+        marginLeft: 5,
+        alignSelf: 'stretch',
+        justifyContent: 'center'
+    },
+    addMicbutton: {
+        height: 36,
+        flex: 1,
+        flexDirection: 'row',
+        backgroundColor: '#2196f3',
+        borderColor: '#2196f3',
+        borderWidth: 1,
+        borderRadius: 8,
+        marginTop: 150,
         marginBottom: 10,
         alignSelf: 'stretch',
         justifyContent: 'center'
+    },
+    selectDropDown: {
+        marginTop: 5,
+        borderColor: '#2196f3',
+        padding: 4,
+        flex: 4,
+        borderWidth: 1,
+        borderRadius: 8,
+        color: '#2196f3'
     },
     searchInput: {
         height: 36,
@@ -203,7 +313,6 @@ var styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#2196f3',
         borderRadius: 8,
-        color: '#2196f3'
     },
     image: {
         width: 100,
@@ -211,6 +320,9 @@ var styles = StyleSheet.create({
     },
     banner: {
         backgroundColor: '#055'
+    },
+    selectedOption: {
+        padding: 5
     }
 });
 

@@ -180,7 +180,7 @@ Object.assign(SearchResults.prototype, {
       return (
           <TouchableOpacity onPress={() => this.onPressRow(rowData, sectionID)}>
             <View style={styles.rowStyle}>
-              <Text style={styles.rowText}>{rowData.openmic_name ? rowData.openmic_name : 'Open Mic at ' + rowData.venue_name}</Text>
+              <Text style={styles.rowText}>{rowData.name ? rowData.name : 'Open Mic at ' + rowData.venue_name}</Text>
             </View>
           </TouchableOpacity>
       );
@@ -188,7 +188,7 @@ Object.assign(SearchResults.prototype, {
     onPressRow : function (rowData, sectionID) {
     rowData.date = this.state.dataSource._getSectionHeaderData(this.state.dataSource._dataBlob, sectionID);
       this.props.navigator.push({
-        title: rowData.openmic_name ? rowData.openmic_name : 'Open Mic at ' + rowData.venue_name,
+        title: rowData.name ? rowData.name : 'Open Mic at ' + rowData.venue_name,
         component: OpenMicView,
         passProps: {openmic: rowData}
       });

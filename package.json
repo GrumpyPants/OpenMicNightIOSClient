@@ -8,6 +8,7 @@
   "dependencies": {
     "react-native": "^0.18.1",
     "react-native-admob": "^0.3.0",
+    "react-native-dropdown": "0.0.6",
     "tcomb-form-native": "^0.3.3"
   },
   "devDependencies": {
