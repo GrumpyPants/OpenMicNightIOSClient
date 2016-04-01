@@ -35,8 +35,7 @@ function urlForQueryAndPage(key, city, state) {
     var querystring = Object.keys(data)
         .map(key => key + '=' + encodeURIComponent(data[key]))
         .join('&');
-
-    return 'http://localhost:3000/api/openmic/listForCity?' + querystring;
+    return 'http://salty-oasis-82408.herokuapp.com/api/openmic/listForCity?' + querystring;
 };
 
 class SearchPage extends Component {

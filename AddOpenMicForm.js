@@ -145,7 +145,7 @@ var options = {
     },
     nextOpenMicDate: {
         mode: 'date',
-        minimumDate: moment().toDate()
+        //minimumDate: moment().toDate()
     },
     otherNotes: {
         //placeholder: 'Opmerking',
@@ -180,8 +180,9 @@ class AddOpenMicForm extends Component {
       var openMic = this.props.openmic;
       var signUpTime = moment(this.extractTimeFromDate(openMic.sign_up_time), 'hh:mma').toDate();
       var startTime = moment(this.extractTimeFromDate(openMic.start_time), 'hh:mma').toDate();
-      //var startTime = moment(this.extractTimeFromDate(openMic.start_time), 'hh:mma').toDate();
-      var nextOpenMicDate = moment(openMic.next_openmic_date).toDate();
+      var localDateTime = moment(openMic.next_openmic_date).toDate();
+      var nextOpenMicDate = new Date(localDateTime.getTime() + localDateTime.getTimezoneOffset() * 60000);
+
       var openmicWeekDay = this.getSelectedOpenMicWeekday(openMic);
       return {
           openMicName: openMic.name,
@@ -237,7 +238,7 @@ class AddOpenMicForm extends Component {
   };
 
   saveNewOpenMic(openmic) {
-      fetch('http://localhost:3000/api/openmic/save', {
+      fetch('http://salty-oasis-82408.herokuapp.com/api/openmic/save', {
           method: 'post',
           headers: {
               'Accept': 'application/json',
@@ -259,7 +260,7 @@ class AddOpenMicForm extends Component {
   }
 
     updateOpenMic(id, openmic) {
-        fetch('http://localhost:3000/api/openmic/update', {
+        fetch('http://salty-oasis-82408.herokuapp.com/api/openmic/update', {
             method: 'post',
             headers: {
                 'Accept': 'application/json',

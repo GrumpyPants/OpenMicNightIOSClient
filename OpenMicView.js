@@ -159,7 +159,7 @@ class OpenMicView extends Component {
 
     _submitDeleteOpenMicRequest(){
         let id = this.props.openmic.id;
-        fetch('http://localhost:3000/api/openmic/flagForDeletion', {
+        fetch('http://salty-oasis-82408.herokuapp.com/api/openmic/flagForDeletion', {
             method: 'post',
             headers: {
                 'Accept': 'application/json',
