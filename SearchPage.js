@@ -92,7 +92,7 @@ class SearchPage extends Component {
             )
         }
         else{
-            var query = urlForQueryAndPage('place_name', this.state.searchString, this.state.usa);
+            var query = urlForQueryAndPage('place_name', this.state.searchString.trim(), this.state.usa);
             this._executeQuery(query);
         }
     }

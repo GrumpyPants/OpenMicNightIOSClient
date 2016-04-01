@@ -22,7 +22,18 @@ class OpenMicView extends Component {
         super(props);
     }
 
-    _onOpenNavigation(){
+    _onOpenNavigationClicked(){
+        Alert.alert(
+            'OpenMicNight',
+            'Are you sure you want to navigate to this Open Mic?',
+            [
+                {text: 'Yes', onPress: () => this._openNavigation()},
+                {text: 'Cancel', onPress: () => console.log('Cancel'), style: 'cancel'}
+            ]
+        );
+    }
+
+    _openNavigation(){
         var openmic = this.props.openmic;
         var addressFields = [];
         this._addAddressToFieldsArray(openmic.venue_address, addressFields);
@@ -30,7 +41,7 @@ class OpenMicView extends Component {
         addressFields.push(this._replaceWhiteSpaceWithPlus(openmic.city));
         addressFields.push(openmic.state.trim());
         var url = 'http://maps.apple.com/?daddr=' + addressFields.join(',');
-        this._submitOpenUrlRequest(url)
+        this._submitOpenUrlRequest(url);
     }
 
     _addAddressToFieldsArray(venueAddress, addressFields) {
@@ -115,7 +126,7 @@ class OpenMicView extends Component {
             rows.push(
                 <View>
                     <Text style={styles.sectionHeaderText}>CONTACT PHONE NUMBER</Text>
-                    <Text style={styles.hyperlink} onPress={this._submitOpenUrlRequest.bind(this, "tel:" + openmic.contact_phone_number)}>{openmic.contact_phone_number}</Text>
+                    <Text style={styles.hyperlink} onPress={this._onPhoneNumberClicked.bind(this, openmic.contact_phone_number)}>{openmic.contact_phone_number}</Text>
                     <View style={styles.separator}/>
                 </View>
             );
@@ -135,6 +146,17 @@ class OpenMicView extends Component {
             <View>
                 {rows}
             </View>
+        );
+    }
+
+    _onPhoneNumberClicked(phoneNumer) {
+        Alert.alert(
+            'OpenMicNight',
+            'Would you like to call the Open Mic coordinator/venue?',
+            [
+                {text: 'Yes', onPress: () => this._submitOpenUrlRequest("tel:" + phoneNumer)},
+                {text: 'No', onPress: () => console.log('No'), style: 'cancel'}
+            ]
         );
     }
 
@@ -194,7 +216,7 @@ class OpenMicView extends Component {
                             <Text style={styles.sectionHeaderText}>LOCATION</Text>
                             <Text style={styles.valueText}>{openmic.venue_name}</Text>
                         </View>
-                        <TouchableHighlight onPress={this._onOpenNavigation.bind(this)}>
+                        <TouchableHighlight onPress={this._onOpenNavigationClicked.bind(this)}>
                             <Image
                                 style={styles.navigationIcon}
                                 source={require('./img/navigation.png')}
