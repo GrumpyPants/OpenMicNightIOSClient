@@ -91,6 +91,15 @@ class SearchPage extends Component {
                 ]
             )
         }
+        else if (!this.state.usa) {
+            Alert.alert(
+                'OpenMicNight',
+                'Please select a state.',
+                [
+                    {text: 'Ok'},
+                ]
+            )
+        }
         else{
             var query = urlForQueryAndPage('place_name', this.state.searchString.trim(), this.state.usa);
             this._executeQuery(query);
