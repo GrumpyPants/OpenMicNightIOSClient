@@ -39,7 +39,7 @@ function urlForQueryAndPage(key, city, state) {
 };
 
 class SearchPage extends Component {
-    static BannerAdUnitId = 'ca-app-pub-3940256099942544/2934735716';
+    static BannerAdUnitId = 'ca-app-pub-1917714652810711/9686783384';
 
     constructor(props) {
         super(props);

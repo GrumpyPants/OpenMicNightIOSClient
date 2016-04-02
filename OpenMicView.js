@@ -275,7 +275,7 @@ class OpenMicView extends Component {
                 <Banner
                     style={styles.banner}
                     bannerSize={'smartBannerPortrait'}
-                    adUnitID={'ca-app-pub-3940256099942544/2934735716'} />
+                    adUnitID={'ca-app-pub-1917714652810711/9686783384'} />
             </View>
         );
     }
